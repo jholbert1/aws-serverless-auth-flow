@@ -1,0 +1,31 @@
+Type: AWS::Cognito::UserPoolClient
+Properties:
+  AllowedOAuthFlowsUserPoolClient: true
+  AllowedOAuthFlows:
+    - implicit
+  AllowedOAuthScopes:
+    - aws.cognito.signin.user.admin
+    - email
+    - openid
+    - phone
+    - profile
+  UserPoolId: !Ref cognitoUserPool
+  ClientName: ${self:custom.userPoolClientName}
+  CallbackURLs:
+    - ${self:custom.cognitoCallbackUrl}
+  GenerateSecret: False
+  ReadAttributes:
+    - email
+  AccessTokenValidity: 5
+  IdTokenValidity: 5
+  ExplicitAuthFlows:
+    - ALLOW_ADMIN_USER_PASSWORD_AUTH
+    - ALLOW_CUSTOM_AUTH
+    - ALLOW_USER_PASSWORD_AUTH
+    - ALLOW_USER_SRP_AUTH
+    - ALLOW_REFRESH_TOKEN_AUTH
+  LogoutURLs:
+    - ${self:custom.cognitoSingOutUrl}
+  SupportedIdentityProviders:
+    - COGNITO
+    - Google

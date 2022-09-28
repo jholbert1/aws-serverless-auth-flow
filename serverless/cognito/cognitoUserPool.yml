@@ -1,0 +1,15 @@
+Type: AWS::Cognito::UserPool
+Properties:
+  UserPoolName: ${self:custom.userPoolName}
+  Policies:
+    PasswordPolicy:
+      MinimumLength: 8
+      RequireNumbers: True
+      RequireSymbols: True
+      RequireUppercase: True
+      RequireLowercase: True
+  AutoVerifiedAttributes: ["email"]
+  Schema:
+    - Mutable: True
+      Name: email
+      Required: True

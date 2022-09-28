@@ -1,0 +1,16 @@
+registerUser:
+name: ${self:custom.projectCode}-${opt:stage, self:custom.stage}-register-user
+handler: src/ports/httpCommands/registerUser.handler
+role: roleUserRegistration2
+environment:
+  COGNITO_POOL_ID: !Ref cognitoUserPool
+  COGNITO_CLIENT_ID: !Ref cognitoUserPoolClient
+events:
+  - http:
+      path: /user
+      method: post
+      request:
+        parameters:
+          headers:
+            Content-Type: True
+            Accept: True

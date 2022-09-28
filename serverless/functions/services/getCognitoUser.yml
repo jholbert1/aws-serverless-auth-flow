@@ -1,0 +1,24 @@
+getCognitoUser:
+name: ${self:custom.projectCode}-${opt:stage, self:custom.stage}-get-users
+handler: src/ports/httpQueries/getUsers.handler
+role: roleUserRegistration2
+environment:
+  COGNITO_POOL_ID: !Ref cognitoUserPool
+  COGNITO_CLIENT_ID: !Ref cognitoUserPoolClient
+tags:
+  project-code: ${self:custom.projectCode}
+  domain: Authentication
+events:
+  - http:
+      path: /getUsers
+      method: get
+      request:
+        parameters:
+          headers:
+            Authorization: True
+            Accept: True
+      authorizer:
+        name: authorizer
+        resultTtlInSeconds: 0
+        identitySource: method.request.header.Authorization
+        type: request

@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+        "target": "ES2017",
+        "module": "commonjs",
+        "outDir": "dist",
+        // "rootDir": "src",
+        "rootDirs": [
+            "src"
+        ],
+        "strict": true,
+        "allowJs": true,
+        "removeComments": true,
+        "typeRoots": [
+            "node_modules/@types"
+        ],
+        "types": [
+            "node"
+        ],
+        "esModuleInterop": true,
+        "inlineSourceMap": false,
+        "noImplicitAny": false,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "experimentalDecorators": true
+    },
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts",
+        "**/*.test.ts"
+    ],
+    "include": [
+        "src/**/*",
+        "config"
+    ]
+}

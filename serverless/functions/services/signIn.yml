@@ -1,0 +1,19 @@
+signIn:
+name: ${self:custom.projectCode}-${opt:stage, self:custom.stage}-login
+handler: src/ports/httpCommands/signInUser.handler
+role: roleUserRegistration2
+environment:
+  COGNITO_POOL_ID: !Ref cognitoUserPool
+  COGNITO_CLIENT_ID: !Ref cognitoUserPoolClient
+tags:
+  project-code: ${self:custom.projectCode}
+  domain: Authentication
+events:
+  - http:
+      path: /login
+      method: post
+      request:
+        parameters:
+          headers:
+            Content-Type: True
+            Accept: True

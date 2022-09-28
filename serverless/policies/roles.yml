@@ -1,0 +1,27 @@
+roleUserRegistration2:
+  Type: AWS::IAM::Role
+  Properties:
+    RoleName: ${opt:stage, self:custom.stage}_roleUserRegistration2
+    AssumeRolePolicyDocument:
+      Version: "2012-10-17"
+      Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+              - lambda.amazonaws.com
+          Action: sts:AssumeRole
+    Policies:
+      - PolicyName: ${opt:stage, self:custom.stage}_policyUserRegistration
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - cognito-idp:AdminInitiateAuth
+                - cognito-idp:AdminCreateUser
+                - cognito-idp:AdminSetUserPassword
+                - cognito-idp:ListUsers
+              Resource: "*"
+            - ${file(serverless/policies/actions/cloudWatchLogs.yml)}
+
+

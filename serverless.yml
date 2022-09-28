@@ -1,0 +1,62 @@
+service: cms-backend-api
+frameworkVersion: "3"
+
+useDotenv: True
+
+plugins:
+  - serverless-offline
+  - serverless-plugin-typescript
+
+custom:
+  projectCode: cms-backend-api
+  stage: ${opt:stage, self:provider.stage}
+  userPoolName: ${opt:stage, self:provider.stage}_cognitoUserPool
+  userPoolClientName: ${opt:stage, self:provider.stage}_cognitoUserPoolClient
+  cognitoDomainName: ${opt:stage, self:provider.stage}-cms-backend-domain-app
+  cognitoCallbackUrl: ${env:COGNITO_CALLBACK_URL}
+  cognitoSingOutUrl: ${env:COGNITO_SIGN_OUT_URL}
+  dynamoNames:
+    users: ${opt:stage, self:provider.stage}_cms_users
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+
+functions:
+  authorizer:
+    handler: src/ports/eventHandlers/cognitoAuthorizer.handler
+    role: roleUserRegistration2
+  # Authentication Flows
+  registerUser: ${file(serverless/functions/services/registerUser.yml)}
+  signIn: ${file(serverless/functions/services/signIn.yml)}
+  disableUser: ${file(serverless/functions/services/disableUser.yml)}
+  enableUser: ${file(serverless/functions/services/enableUser.yml)}
+  getCognitoUser: ${file(serverless/functions/services/getCognitoUser.yml)}
+  deleteUser: ${file(serverless/functions/services/deleteUser.yml)}
+
+resources:
+  Resources:
+    # Roles
+    roleUserRegistration2: ${file(serverless/policies/roles.yml):roleUserRegistration2}
+
+    # Dynamo Tables
+    ddbUsers: ${file(serverless/dynamodb/ddbUsers.yml)}
+
+    # Cognito
+    cognitoUserPool: ${file(serverless/cognito/cognitoUserPool.yml)}
+
+    cognitoUserPoolClient: ${file(serverless/cognito/cognitoUserPoolClient.yml)}
+
+    cognitoUserDomain: ${file(serverless/cognito/cognitoUserDomain.yml)}
+
+    CognitoUserPoolIdentityProvider: ${file(serverless/cognito/CognitoUserPoolIdentityProvider.yml)}
+
+  Outputs:
+    ddbUsersARN:
+      Description: "Users DynamoDB ARN"
+      Value:
+        "Fn::GetAtt": [ddbUsers, Arn]
+    cognitoUserPoolArn:
+      Description: "Cognito ARN"
+      Value:
+        "Fn::GetAtt": [cognitoUserPool, Arn]
